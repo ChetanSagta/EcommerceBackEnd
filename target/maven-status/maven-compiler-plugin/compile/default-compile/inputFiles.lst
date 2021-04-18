@@ -1,0 +1,8 @@
+/home/chetan/Coding/ECommerce/src/main/java/ecommerce/entity/Account.java
+/home/chetan/Coding/ECommerce/src/main/java/ecommerce/main/ECommerceApplication.java
+/home/chetan/Coding/ECommerce/src/main/java/ecommerce/controller/HomeController.java
+/home/chetan/Coding/ECommerce/src/main/java/ecommerce/entity/SecureAccount.java
+/home/chetan/Coding/ECommerce/src/main/java/ecommerce/services/AccountService.java
+/home/chetan/Coding/ECommerce/src/main/java/ecommerce/config/SecurityConfig.java
+/home/chetan/Coding/ECommerce/src/main/java/ecommerce/controller/LoginController.java
+/home/chetan/Coding/ECommerce/src/main/java/ecommerce/repositories/AccountRepository.java
