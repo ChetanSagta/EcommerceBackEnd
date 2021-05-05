@@ -8,16 +8,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-public class HomeController implements ErrorController {
+public class HomeController {
   
-  @RequestMapping( value = "/error", method = {RequestMethod.GET, RequestMethod.PUT})
-  public String error() {
-    return "Error Landing Page";
+  @RequestMapping( value = "/user", method = {RequestMethod.GET, RequestMethod.PUT})
+  public String user() {
+    return "Hello User";
   }
 
-@Override
-public String getErrorPath() {
-	return "/error";
-}
-  
+  @RequestMapping( value = "/admin", method = {RequestMethod.GET, RequestMethod.PUT})
+  public String admin() {
+    return "Hello Admin";
+  }
+
+  @RequestMapping( value = "/", method = {RequestMethod.GET, RequestMethod.PUT})
+  public String home() {
+    return "Home Page";
+  }
+
+  @RequestMapping(value = "/api/test", method = {RequestMethod.GET,RequestMethod.POST})
+  public String testEndpoint(){
+    return "You are authenticated";
+  }
+
 }
