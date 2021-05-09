@@ -1,7 +1,9 @@
 package ecommerce.config;
 
+import ecommerce.filter.JWTAuthenticationFilter;
 import ecommerce.services.MyUserDetailsService;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 @Configuration
@@ -29,9 +32,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        http.addFilterBefore(new JWTAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
+
+
         //http.cors().and().csrf().and().httpBasic().disable();
-        http.csrf().disable().authorizeRequests().antMatchers("/api/signup","/api/login").permitAll()
-                .antMatchers("/admin").authenticated()
+        http.csrf().disable().authorizeRequests()
+                .antMatchers("/api/signup","/api/login","/api/decodeToken")
+                .permitAll()
+                .antMatchers("/admin","/api/encodeToken").authenticated()
                 .antMatchers("/user").authenticated()
                 .antMatchers("/").authenticated()
                 .antMatchers("/test").hasAuthority("USER")
@@ -55,5 +64,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder(16);
     }
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LogManager.getLogger(this.getClass().getName());
 }
