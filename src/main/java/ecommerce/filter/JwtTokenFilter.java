@@ -63,7 +63,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 .orElse(null);
 
         logger.info("Got User From Token : " + user.getUsername());
-        logger.info("Got Authority From Token : " + user.getAuthority());
+        logger.info("Got Authority From Token : " + Collections.singletonList((GrantedAuthority) user::getAuthority));
 
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(

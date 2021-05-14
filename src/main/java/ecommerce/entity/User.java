@@ -22,7 +22,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.authority = "ROLE_USER";
+        this.authority = "ROLE_READ";
     }
 
     public User() {}
