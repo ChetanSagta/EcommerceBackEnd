@@ -1,7 +1,6 @@
 package ecommerce.controller;
 
 import ecommerce.entity.SecureUser;
-import ecommerce.entity.jwt.JwtPayload;
 import ecommerce.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.impl.DefaultClaims;
@@ -9,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Secured("ROLE_READ")
 public class JwtController {
     @Autowired
     JwtTokenUtil jwtTokenUtil;

@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -39,10 +40,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    FilterChain chain)
-            throws ServletException, IOException {
+                                    FilterChain chain) throws ServletException, IOException {
         // Get authorization header and validate
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if(header == null)
+            throw new ServletException("Authentication Header Missing..Please use a valid JWT");
         if (header.isEmpty() || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
@@ -60,10 +62,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 .findByUsername(jwtTokenUtil.getUsernameFromToken(token))
                 .orElse(null);
 
+        logger.info("Got User From Token : " + user.getUsername());
+        logger.info("Got Authority From Token : " + user.getAuthority());
+
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(
                 user, user.getPassword(),
-                Collections.singleton(user::getAuthority));
+                Collections.singletonList((GrantedAuthority) user::getAuthority));
 
         authentication.setDetails(
                 new WebAuthenticationDetailsSource().buildDetails(request)
@@ -81,6 +86,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         return ignorePaths.contains(path);
     }
 
-    Logger logger = LogManager.getLogger(this.getClass().getName());
+    Logger logger = LogManager.getLogger(JwtTokenFilter.class);
 
 }

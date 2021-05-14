@@ -39,9 +39,11 @@ public class UserService {
     return userRepo.findByEmail(email);
   }
 
-  public void addAccount(WebRequest webRequest) {
+  public void addAccount(WebRequest webRequest) throws Exception {
 
     User user = new User();
+    if(userRepo.findByUsername(webRequest.getUsername()).isPresent())
+        throw new Exception("User is already present");
     Optional<User> accountsFound = userRepo.findByEmail(webRequest.getEmail());
     if (accountsFound.isPresent()) {
       throw new RuntimeException("Email already registered. Please use different email.");

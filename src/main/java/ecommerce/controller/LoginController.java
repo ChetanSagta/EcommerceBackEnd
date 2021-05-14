@@ -34,9 +34,10 @@ public class LoginController {
   }
 
   @PostMapping("/api/signup") 
-  public void signup(@RequestBody final WebRequest account) {
+  public String signup(@RequestBody final WebRequest account) throws Exception {
     userService.addAccount(account);
-    ResponseEntity.ok().build();
+    //ResponseEntity.ok().build();
+    return "You're Account has been created..Please login to use the application";
  }
 
   private final Logger logger = Logger.getLogger(this.getClass().getName());
