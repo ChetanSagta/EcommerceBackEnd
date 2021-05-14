@@ -2,7 +2,7 @@ package ecommerce.services;
 
 import ecommerce.entity.SecureUser;
 import ecommerce.entity.User;
-import ecommerce.repositories.UserRepository;
+import ecommerce.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,12 +15,17 @@ import java.util.Optional;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    UserRepository userRepository;
+    private final UserRepo userRepo;
+
+    public MyUserDetailsService(UserRepo userRepo){
+        this.userRepo = userRepo;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
-        return user.map(SecureUser::new).orElseThrow(()-> new UsernameNotFoundException("User not found"));
+        Optional<User> user = userRepo.findByUsername(username);
+        return user.map(SecureUser::new).orElseThrow(
+                ()-> new UsernameNotFoundException("User : "+ username + "not found"));
 
     }
 }

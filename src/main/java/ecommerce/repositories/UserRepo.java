@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 import ecommerce.entity.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepo extends JpaRepository<User, Long> {
 
-  public Optional<User> findByEmail(String email);
+  Optional<User> findByEmail(String email);
 
-  public Optional<User> findByUsername(String username);
+  Optional<User> findByUsername(String username);
 
 }

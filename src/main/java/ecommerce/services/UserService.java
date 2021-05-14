@@ -2,7 +2,7 @@ package ecommerce.services;
 
 import ecommerce.entity.User;
 import ecommerce.entity.WebRequest;
-import ecommerce.repositories.UserRepository;
+import ecommerce.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,11 +20,11 @@ import java.util.logging.Logger;
 public class UserService {
 
   @Autowired
-  private UserRepository userRepository;
+  private UserRepo userRepo;
   @Autowired
   private AuthenticationManager authenticationManager;
   @Autowired
-  private MyUserDetailsService userDetailsService;
+  private ecommerce.services.MyUserDetailsService userDetailsService;
   @Autowired
   private BCryptPasswordEncoder bcryptEncoder;
 
@@ -36,31 +36,31 @@ public class UserService {
   }
 
   public Optional<User> findByEmail(String email) {
-    return userRepository.findByEmail(email);
+    return userRepo.findByEmail(email);
   }
 
   public void addAccount(WebRequest webRequest) {
 
     User user = new User();
-    Optional<User> accountsFound = userRepository.findByEmail(webRequest.getEmail());
+    Optional<User> accountsFound = userRepo.findByEmail(webRequest.getEmail());
     if (accountsFound.isPresent()) {
-      throw new RuntimeException("User already registered. Please use different username.");
+      throw new RuntimeException("Email already registered. Please use different email.");
     }
 
     user.setEmail(webRequest.getEmail());
     user.setPassword(bcryptEncoder.encode(webRequest.getPassword()));
     user.setUsername(webRequest.getUsername());
     user.setAuthority("READ");
-    userRepository.save(user);
+    userRepo.save(user);
   }
 
   public User readUserByUsername(String username) {
-    return userRepository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
+    return userRepo.findByUsername(username).orElseThrow(EntityNotFoundException::new);
   }
 
   public User findEmail(WebRequest webRequest) {
 
-    Optional<User> account = userRepository.findByEmail(webRequest.getEmail());
+    Optional<User> account = userRepo.findByEmail(webRequest.getEmail());
     if (account.isPresent() && bcryptEncoder.matches(
             webRequest.getPassword(), account.get().getPassword())) {
       return account.get();
@@ -68,7 +68,7 @@ public class UserService {
     throw new RuntimeException("Email or Password is Wrong");
   }
 
-  public void authenticateUser(WebRequest webRequest) {
+  public UserDetails authenticateUser(WebRequest webRequest) {
     UserDetails userDetails = userDetailsService.loadUserByUsername(webRequest.getUsername());
     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
             new UsernamePasswordAuthenticationToken(userDetails, webRequest.getPassword(), userDetails.getAuthorities());
@@ -82,6 +82,7 @@ public class UserService {
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     logger.info ("Principal : " + authentication.getPrincipal());
+    return userDetails;
   }
     private final Logger logger = Logger.getLogger(this.getClass().getName());
   }

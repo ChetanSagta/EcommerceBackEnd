@@ -6,10 +6,8 @@ import org.springframework.stereotype.Component;
 public class JwtPayload{
 
     String email;
-    String password;
     String authority;
-    String subject;
-    String issuer;
+    String user;
     String jti;
     long exp;
 
@@ -21,29 +19,18 @@ public class JwtPayload{
         this.exp = exp;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getUser() {
+        return user;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public String getIssuer() {
-        return issuer;
-    }
+    public JwtPayload(){}
 
-    public void setIssuer(String issuer) {
-        this.issuer = issuer;
-    }
-
-    public JwtPayload(){
-
-    }
-
-    public JwtPayload(String email, String password, String authority, String jti) {
+    public JwtPayload(String email, String authority, String jti) {
         this.email = email;
-        this.password = password;
         this.authority = authority;
         this.jti = jti;
     }
@@ -54,14 +41,6 @@ public class JwtPayload{
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getAuthority() {
