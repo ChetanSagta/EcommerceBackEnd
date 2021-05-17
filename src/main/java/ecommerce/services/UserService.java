@@ -71,6 +71,7 @@ public class UserService {
   }
 
   public UserDetails authenticateUser(WebRequest webRequest) {
+    logger.info("User Received : " + webRequest.toString());
     UserDetails userDetails = userDetailsService.loadUserByUsername(webRequest.getUsername());
     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
             new UsernamePasswordAuthenticationToken(userDetails, webRequest.getPassword(), userDetails.getAuthorities());

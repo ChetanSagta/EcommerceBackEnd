@@ -21,6 +21,10 @@ public class SecureUser implements UserDetails {
     public SecureUser() {
     }
 
+    public void erasePassword(){
+        password = "";
+    }
+
 
     public SecureUser(User user) {
         this.id = user.getId();

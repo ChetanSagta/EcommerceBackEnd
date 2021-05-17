@@ -30,4 +30,12 @@ public class WebRequest {
         this.username = username;
     }
 
+    @Override
+    public String toString() {
+        return "WebRequest{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                '}';
+    }
 }
