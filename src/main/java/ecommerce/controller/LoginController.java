@@ -1,7 +1,7 @@
 package ecommerce.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import ecommerce.entity.ResponseMessage;
 import ecommerce.entity.SecureUser;
 import ecommerce.entity.WebRequest;
 import ecommerce.services.UserService;
@@ -34,14 +34,12 @@ public class LoginController {
         String token = jwtTokenUtil.generateToken(user);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Authorization Token", token);
-        //return new ResponseEntity<String>(new ObjectMapper().readValue("message:"+user.getUsername(),String.class), responseHeaders, HttpStatus.OK);
         return new ResponseEntity(user,responseHeaders,HttpStatus.OK);
     }
 
-    @PostMapping("/api/signup")
-    public String signup(@RequestBody final WebRequest account) throws Exception {
+    @PostMapping(value = "/api/signup",consumes = "application/json")
+    public ResponseEntity signup(@RequestBody final WebRequest account) throws Exception {
         userService.addAccount(account);
-        //ResponseEntity.ok().build();
-        return "You're Account has been created..Please login to use the application";
+        return ResponseEntity.ok("You're Account has been created..Please login to use the application");
     }
 }

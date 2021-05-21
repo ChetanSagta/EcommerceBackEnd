@@ -4,6 +4,7 @@ import ecommerce.entity.User;
 import ecommerce.entity.WebRequest;
 import ecommerce.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
@@ -46,7 +48,7 @@ public class UserService {
         throw new Exception("User is already present");
     Optional<User> accountsFound = userRepo.findByEmail(webRequest.getEmail());
     if (accountsFound.isPresent()) {
-      throw new RuntimeException("Email already registered. Please use different email.");
+      throw new Exception("Email already registered. Please use different email.");
     }
 
     user.setEmail(webRequest.getEmail());
@@ -60,14 +62,14 @@ public class UserService {
     return userRepo.findByUsername(username).orElseThrow(EntityNotFoundException::new);
   }
 
-  public User findEmail(WebRequest webRequest) {
+  public User findEmail(WebRequest webRequest) throws Exception {
 
     Optional<User> account = userRepo.findByEmail(webRequest.getEmail());
     if (account.isPresent() && bcryptEncoder.matches(
             webRequest.getPassword(), account.get().getPassword())) {
       return account.get();
     }
-    throw new RuntimeException("Email or Password is Wrong");
+    throw new Exception("Email or Password is Wrong");
   }
 
   public UserDetails authenticateUser(WebRequest webRequest) {
