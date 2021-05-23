@@ -1,7 +1,6 @@
 package ecommerce.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import ecommerce.entity.ResponseMessage;
 import ecommerce.entity.SecureUser;
 import ecommerce.entity.WebRequest;
 import ecommerce.services.UserService;
