@@ -3,6 +3,7 @@ package ecommerce.filter;
 import ecommerce.entity.User;
 import ecommerce.repositories.UserRepo;
 import ecommerce.util.JwtTokenUtil;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +22,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.apache.log4j.LogManager;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -80,7 +80,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     public boolean shouldNotFilter(HttpServletRequest request){
-        List<String> ignorePaths = Arrays.asList("/api/login","/api/signup");
+        String[] acceptableEndpoints = {"/api/login","/api/signup","/api/products/getAll","/api/products/getByTitle/{title}"};
+        List<String> ignorePaths = Arrays.asList(acceptableEndpoints);
         String path = request.getRequestURL().substring(21);
         logger.info("Path for Filter : " + path);
         return ignorePaths.contains(path);

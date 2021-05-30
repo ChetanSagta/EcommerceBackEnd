@@ -7,7 +7,6 @@ import ecommerce.services.UserService;
 import ecommerce.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,19 +24,20 @@ public class LoginController {
     JwtTokenUtil jwtTokenUtil;
 
     @PostMapping("/api/login")
-    public ResponseEntity<String> login(@RequestBody final WebRequest webRequest) throws JsonProcessingException {
+    public ResponseEntity<SecureUser> login(@RequestBody final WebRequest webRequest) throws JsonProcessingException {
         SecureUser user = (SecureUser) userService.authenticateUser(webRequest);
         user.erasePassword();
         if(user == null)
             return ResponseEntity.notFound().build();
         String token = jwtTokenUtil.generateToken(user);
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Authorization Token", token);
-        return new ResponseEntity(user,responseHeaders,HttpStatus.OK);
+        responseHeaders.set(HttpHeaders.AUTHORIZATION, token);
+        responseHeaders.add("Access-Control-Expose-Headers", "Authorization");
+        return ResponseEntity.ok().headers(responseHeaders).body(user);
     }
 
     @PostMapping(value = "/api/signup",consumes = "application/json")
-    public ResponseEntity signup(@RequestBody final WebRequest account) throws Exception {
+    public ResponseEntity<String> signup(@RequestBody final WebRequest account) throws Exception {
         userService.addAccount(account);
         return ResponseEntity.ok("You're Account has been created..Please login to use the application");
     }
