@@ -41,8 +41,8 @@ public class ReadJsonFile {
     List<Product> products = objectMapper.readValue(finalLine.toString(), new TypeReference<List<Product>>(){});
     //System.out.println(products.get(0).getClass());
     //productRepo.saveAll(map);
-    String query = "insert into product(title,`description`, category, imageURL, price) values(?,?,?,?,?)";
-    Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/ecommerce","root","root");
+    String query = "insert into product(title,`description`, category, image_url, price) values(?,?,?,?,?)";
+    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce","root","root");
     PreparedStatement pstmt = connection.prepareStatement(query);
     for(Product product: products){
       pstmt.setString(1,product.getTitle());
@@ -51,7 +51,7 @@ public class ReadJsonFile {
       pstmt.setString(4,product.getImage());
       pstmt.setInt(5,product.getPrice());
 
-      pstmt.executeQuery();
+      pstmt.execute();
     }
   }
 
