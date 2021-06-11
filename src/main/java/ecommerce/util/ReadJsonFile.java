@@ -31,24 +31,18 @@ public class ReadJsonFile {
     String line="";
     StringBuilder finalLine= new StringBuilder();
     ObjectMapper objectMapper = new ObjectMapper();
-//      Product products = objectMapper.readValue(new InputStreamReader(this.getClass().getResourceAsStream(file)), Product.class);
+
     while((line = br.readLine())!=null) finalLine.append(line.trim());
 
-//    JsonParser jsonParser = objectMapper.createParser(finalLine.toString());
-//    TreeNode tree = objectMapper.readTree(jsonParser);
-//    System.out.println(tree.get("id"));
-
     List<Product> products = objectMapper.readValue(finalLine.toString(), new TypeReference<List<Product>>(){});
-    //System.out.println(products.get(0).getClass());
-    //productRepo.saveAll(map);
     String query = "insert into product(title,`description`, category, image_url, price) values(?,?,?,?,?)";
     Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce","root","root");
     PreparedStatement pstmt = connection.prepareStatement(query);
     for(Product product: products){
-      pstmt.setString(1,product.getTitle());
-      pstmt.setString(2,product.getDescription());
-      pstmt.setString(3,product.getCategory());
-      pstmt.setString(4,product.getImage());
+      pstmt.setString(1,product.getTitle().trim());
+      pstmt.setString(2,product.getDescription().trim());
+      pstmt.setString(3,product.getCategory().trim());
+      pstmt.setString(4,product.getImage().trim());
       pstmt.setInt(5,product.getPrice());
 
       pstmt.execute();

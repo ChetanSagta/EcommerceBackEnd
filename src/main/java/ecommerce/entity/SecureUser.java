@@ -24,7 +24,7 @@ public class SecureUser implements UserDetails {
 
 
     public SecureUser(User user) {
-        this.id = user.getId();
+        this.id = user.getUserId();
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.password = user.getPassword();

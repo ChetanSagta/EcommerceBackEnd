@@ -39,6 +39,6 @@ public class ProductService {
 
   public void deleteProduct(String productTitle) {
     Product product = productRepo.findByTitle(productTitle);
-    productRepo.deleteById(product.getId());
+    productRepo.deleteById(product.getProductId());
   }
 }

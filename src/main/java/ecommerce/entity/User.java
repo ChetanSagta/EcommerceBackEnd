@@ -1,20 +1,19 @@
 package ecommerce.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long userId;
     private String username;
     private String email;
     private String password;
     private String authority;
+    @OneToOne(mappedBy = "user")
+    private ShoppingCart cart;
 
     public User(final String username, final String email, final String password) {
         this.username = username;
@@ -26,12 +25,12 @@ public class User {
     public User() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(final Long id) {
-        this.id = id;
+    public void setUserId(final Long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -64,5 +63,13 @@ public class User {
 
     public void setAuthority(final String authority) {
         this.authority = authority;
+    }
+
+    public ShoppingCart getCart() {
+        return cart;
+    }
+
+    public void setCart(ShoppingCart cart) {
+        this.cart = cart;
     }
 }

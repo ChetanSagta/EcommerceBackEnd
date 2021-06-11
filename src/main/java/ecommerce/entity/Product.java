@@ -1,20 +1,27 @@
 package ecommerce.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    Long id;
-    @Column(name="title")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
+    Long productId;
+    @Column(name = "title", columnDefinition = "longtext")
     String title;
+    @Column(columnDefinition = "longtext")
     String description;
+    @Column(columnDefinition = "longtext")
     String category;
-    @Column(name = "image_url")
+    @Column(name = "image_url", columnDefinition = "longtext")
     String image;
     int price;
+//    @OneToMany(mappedBy = "cartItemId")
+//    List<CartItem> cartItems;
+//
 
     public Product(){}
 
@@ -26,12 +33,12 @@ public class Product {
         this.price = price;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public String getTitle() {
@@ -73,4 +80,12 @@ public class Product {
     public void setPrice(int price) {
         this.price = price;
     }
+
+//    public List<CartItem> getCartItems() {
+//        return cartItems;
+//    }
+//
+//    public void setCartItems(List<CartItem> cartItems) {
+//        this.cartItems = cartItems;
+//    }
 }

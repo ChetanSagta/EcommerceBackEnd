@@ -19,9 +19,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -42,6 +42,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
         // Get authorization header and validate
+
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if(header == null)
             throw new ServletException("Authentication Header Missing..Please use a valid JWT");
@@ -80,11 +81,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     public boolean shouldNotFilter(HttpServletRequest request){
-        String[] acceptableEndpoints = {"/api/login","/api/signup","/api/products/getAll","/api/products/getByTitle/{title}"};
+        String[] acceptableEndpoints = {"/api/login","/api/signup","/api/products/getAll","/api/products/getByTitle/.*"};
         List<String> ignorePaths = Arrays.asList(acceptableEndpoints);
         String path = request.getRequestURL().substring(21);
         logger.info("Path for Filter : " + path);
-        return ignorePaths.contains(path);
+        for(String endpoint: acceptableEndpoints){
+            Pattern pattern = Pattern.compile(endpoint);
+            Matcher matcher = pattern.matcher(path);
+            if(matcher.matches())  return true;
+        }
+        return false;
     }
 
     Logger logger = LogManager.getLogger(JwtTokenFilter.class);
