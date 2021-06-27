@@ -12,8 +12,6 @@ public class User {
     private String email;
     private String password;
     private String authority;
-    @OneToOne(mappedBy = "user")
-    private ShoppingCart cart;
 
     public User(final String username, final String email, final String password) {
         this.username = username;
@@ -65,11 +63,4 @@ public class User {
         this.authority = authority;
     }
 
-    public ShoppingCart getCart() {
-        return cart;
-    }
-
-    public void setCart(ShoppingCart cart) {
-        this.cart = cart;
-    }
 }

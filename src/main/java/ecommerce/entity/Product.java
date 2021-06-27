@@ -1,7 +1,6 @@
 package ecommerce.entity;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Product {
@@ -88,4 +87,5 @@ public class Product {
 //    public void setCartItems(List<CartItem> cartItems) {
 //        this.cartItems = cartItems;
 //    }
+
 }

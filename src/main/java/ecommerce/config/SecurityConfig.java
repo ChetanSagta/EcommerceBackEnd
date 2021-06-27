@@ -1,6 +1,5 @@
 package ecommerce.config;
 
-
 import ecommerce.filter.JwtTokenFilter;
 import ecommerce.services.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
