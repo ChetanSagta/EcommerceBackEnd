@@ -1,11 +1,13 @@
 package ecommerce.entity;
 
+import org.springframework.http.HttpStatus;
+
 public class ResponseMessage {
 
     private String message;
-    private int statusCode;
+    private HttpStatus statusCode;
 
-    public ResponseMessage(String message, int statusCode) {
+    public ResponseMessage(String message, HttpStatus statusCode) {
         this.message = message;
         this.statusCode = statusCode;
     }
@@ -18,11 +20,11 @@ public class ResponseMessage {
         this.message = message;
     }
 
-    public int getStatusCode() {
+    public HttpStatus getStatusCode() {
         return statusCode;
     }
 
-    public void setStatusCode(int statusCode) {
+    public void setStatusCode(HttpStatus statusCode) {
         this.statusCode = statusCode;
     }
 }

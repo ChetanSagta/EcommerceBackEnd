@@ -18,9 +18,6 @@ public class Product {
     @Column(name = "image_url", columnDefinition = "longtext")
     String image;
     int price;
-//    @OneToMany(mappedBy = "cartItemId")
-//    List<CartItem> cartItems;
-//
 
     public Product(){}
 
@@ -79,13 +76,5 @@ public class Product {
     public void setPrice(int price) {
         this.price = price;
     }
-
-//    public List<CartItem> getCartItems() {
-//        return cartItems;
-//    }
-//
-//    public void setCartItems(List<CartItem> cartItems) {
-//        this.cartItems = cartItems;
-//    }
 
 }

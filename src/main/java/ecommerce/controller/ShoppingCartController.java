@@ -1,51 +1,47 @@
 package ecommerce.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ecommerce.entity.CartItem;
 import ecommerce.entity.ResponseMessage;
 import ecommerce.entity.ShoppingCartRequest;
 import ecommerce.services.CartService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-@RestController
 @CrossOrigin
+@RestController
+@RequestMapping("/api")
 public class ShoppingCartController {
 
     @Autowired
     CartService cartService;
 
-    @PostMapping("/api/getCart")
+    @PostMapping("/getCart")
     public ResponseEntity<List<CartItem>> getCartDetailsBasedOnUserId(@RequestBody String userName) {
         List<CartItem> cartItemList = cartService.readCart(userName);
-        cartItemList.stream().forEach(cartItem -> cartItem.setUser(null));
+        cartItemList.forEach(cartItem -> cartItem.setUser(null));
         return ResponseEntity.ok(cartItemList);
     }
 
-    @PostMapping("/api/updateCart")
+    @PostMapping("/updateCart")
     public void updateCartContent(long userId) {
+        throw new UnsupportedOperationException();
     }
 
-    @PostMapping("/api/deleteProductFromCart")
-    public void deleteProductFromCart(@RequestBody String content) throws JsonProcessingException {
-        Map<String,Object> result = new ObjectMapper().readValue(content, HashMap.class);
-        cartService.removeProductFromCart(Long.valueOf(result.get("productId").toString()),result.get("userName").toString());
+    @PostMapping("/deleteProductFromCart")
+    public void deleteProductFromCart(@RequestBody Map<String, String> result) {
+        cartService.removeProductFromCart(Long.valueOf(result.get("productId")), result.get("userName"));
     }
 
-    @PostMapping("/api/addProductToCart")
+    @PostMapping("/addProductToCart")
     public ResponseMessage addProductToCart(@RequestBody ShoppingCartRequest shoppingCartRequest) {
         cartService.addProductToCart(shoppingCartRequest.getProductId(), shoppingCartRequest.getUserId(), shoppingCartRequest.getQuantity());
-        return new ResponseMessage("Item added to the cart", 200);
+        return new ResponseMessage("Item added to the cart", HttpStatus.OK);
     }
 
-    private final Logger logger = LogManager.getLogger(ShoppingCartController.class);
 }
