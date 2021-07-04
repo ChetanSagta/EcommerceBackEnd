@@ -1,4 +1,4 @@
-package ecommerce.exceptionHandler;
+package ecommerce.exceptionhandler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
                 new Date(),
                 ex.getMessage());
 
-        return new ResponseEntity<ErrorMessage>(message, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 
     }
 

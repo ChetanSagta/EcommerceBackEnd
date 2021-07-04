@@ -38,6 +38,6 @@ public class ProductController {
     @PostMapping("/products/deleteProduct/{title}")
     public String deleteProduct(@PathVariable("title") String productTitle){
         productService.deleteProduct(productTitle);
-        return String.format("Product with name : {} has been deleted",productTitle);
+        return String.format("Product with name : %s has been deleted",productTitle);
     }
 }

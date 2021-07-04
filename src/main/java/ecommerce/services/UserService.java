@@ -2,6 +2,9 @@ package ecommerce.services;
 
 import ecommerce.entity.User;
 import ecommerce.entity.WebRequest;
+import ecommerce.exceptions.InvalidCredentialException;
+import ecommerce.exceptions.EmailAlreayPresentException;
+import ecommerce.exceptions.UserAlreadyPresentException;
 import ecommerce.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,14 +42,14 @@ public class UserService {
     return userRepo.findByEmail(email);
   }
 
-  public void addAccount(WebRequest webRequest) throws Exception {
+  public void addAccount(WebRequest webRequest) throws UserAlreadyPresentException, EmailAlreayPresentException {
 
     User user = new User();
     if(userRepo.findByUsername(webRequest.getUsername()).isPresent())
-        throw new Exception("User is already present");
+        throw new UserAlreadyPresentException("User is already present");
     Optional<User> accountsFound = userRepo.findByEmail(webRequest.getEmail());
     if (accountsFound.isPresent()) {
-      throw new Exception("Email already registered. Please use different email.");
+      throw new EmailAlreayPresentException("Email already registered. Please use different email.");
     }
 
     user.setEmail(webRequest.getEmail());
@@ -60,18 +63,18 @@ public class UserService {
     return userRepo.findByUsername(username).orElseThrow(EntityNotFoundException::new);
   }
 
-  public User findEmail(WebRequest webRequest) throws Exception {
+  public User findEmail(WebRequest webRequest) throws InvalidCredentialException {
 
     Optional<User> account = userRepo.findByEmail(webRequest.getEmail());
     if (account.isPresent() && bcryptEncoder.matches(
             webRequest.getPassword(), account.get().getPassword())) {
       return account.get();
     }
-    throw new Exception("Email or Password is Wrong");
+    throw new InvalidCredentialException("Email or Password is Wrong");
   }
 
   public UserDetails authenticateUser(WebRequest webRequest) {
-    logger.info("User Received : " + webRequest.toString());
+
     UserDetails userDetails = userDetailsService.loadUserByUsername(webRequest.getUsername());
     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
             new UsernamePasswordAuthenticationToken(userDetails, webRequest.getPassword(), userDetails.getAuthorities());
@@ -80,7 +83,8 @@ public class UserService {
 
     if (usernamePasswordAuthenticationToken.isAuthenticated()) {
       SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-      logger.info(String.format("Auto login %s successfully!", webRequest.getUsername()));
+      String autoLoginMessage = String.format("Auto login %s successfully!", webRequest.getUsername());
+      logger.info(autoLoginMessage);
     }
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

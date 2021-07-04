@@ -1,4 +1,4 @@
-package ecommerce.exceptionHandler;
+package ecommerce.exceptionhandler;
 
 import java.util.Date;
 

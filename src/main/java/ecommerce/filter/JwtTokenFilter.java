@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -53,7 +52,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         // Get jwt token and validate
         final String token = header.split(" ")[1].trim();
-        if (!jwtTokenUtil.validateToken(token)) {
+        boolean validate = jwtTokenUtil.validateToken(token);
+        if (!validate) {
             chain.doFilter(request, response);
             return;
         }
@@ -62,14 +62,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         User user = userRepo
                 .findByUsername(jwtTokenUtil.getUsernameFromToken(token))
                 .orElse(null);
-
-        logger.info("Got User From Token : " + user.getUsername());
-        logger.info("Got Authority From Token : " + Collections.singletonList((GrantedAuthority) user::getAuthority));
+        if(user == null) return ;
 
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(
                 user, user.getPassword(),
-                Collections.singletonList((GrantedAuthority) user::getAuthority));
+                Collections.singletonList(user::getAuthority));
 
         authentication.setDetails(
                 new WebAuthenticationDetailsSource().buildDetails(request)
@@ -82,9 +80,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     public boolean shouldNotFilter(HttpServletRequest request){
         String[] acceptableEndpoints = {"/api/login","/api/signup","/api/products/getAll","/api/products/getByTitle/.*"};
-        List<String> ignorePaths = Arrays.asList(acceptableEndpoints);
         String path = request.getRequestURL().substring(21);
-        logger.info("Path for Filter : " + path);
+        log.info("Path for Filter : " + path);
         for(String endpoint: acceptableEndpoints){
             Pattern pattern = Pattern.compile(endpoint);
             Matcher matcher = pattern.matcher(path);
@@ -93,6 +90,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         return false;
     }
 
-    Logger logger = LogManager.getLogger(JwtTokenFilter.class);
+    Logger log = LogManager.getLogger(JwtTokenFilter.class);
 
 }

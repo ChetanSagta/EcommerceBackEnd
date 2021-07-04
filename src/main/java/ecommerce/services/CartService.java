@@ -48,7 +48,8 @@ public class CartService {
         cartItemRepo.delete(cartItem);
     }
 
-    public void updateProductQuantity(int quantity, Long ProductId, User user) {
+    public void updateProductQuantity(int quantity, Long productId, User user) {
+        throw new UnsupportedOperationException();
 
     }
 

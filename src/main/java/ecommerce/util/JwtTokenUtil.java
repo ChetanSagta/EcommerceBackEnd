@@ -19,9 +19,9 @@ public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -2550185165626007488L;
 
-    public static final long JWT_TOKEN_VALIDITY = 10 * 60 * 60 * 24;
+    public static final long JWT_TOKEN_VALIDITY = 10 * 60 * 60 * 24L;
 
-    private final String SECRET_KEY = "jwtKey";
+    private static final String SECRET_KEY = "jwtKey";
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
@@ -41,12 +41,6 @@ public class JwtTokenUtil implements Serializable {
     //for retrieveing any information from token we will need the secret key
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-    }
-
-    //check if the token has expired
-    private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
     }
 
     //generate token for user
@@ -71,7 +65,6 @@ public class JwtTokenUtil implements Serializable {
     MyUserDetailsService userDetails;
     //validate token
     public Boolean validateToken(String token) {
-        //MyUserDetailsService userDetails = new MyUserDetailsService();
         final String username = getUsernameFromToken(token);
         userDetails.loadUserByUsername(username);
         return true;

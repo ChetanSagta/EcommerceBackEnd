@@ -2,6 +2,8 @@ package ecommerce.controller;
 
 import ecommerce.entity.SecureUser;
 import ecommerce.entity.WebRequest;
+import ecommerce.exceptions.EmailAlreayPresentException;
+import ecommerce.exceptions.UserAlreadyPresentException;
 import ecommerce.services.UserService;
 import ecommerce.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,7 @@ public class LoginController {
     }
 
     @PostMapping(value = "/signup",consumes = "application/json")
-    public ResponseEntity<String> signup(@RequestBody final WebRequest account) throws Exception {
+    public ResponseEntity<String> signup(@RequestBody final WebRequest account) throws EmailAlreayPresentException, UserAlreadyPresentException {
         userService.addAccount(account);
         return ResponseEntity.ok("You're Account has been created..Please login to use the application");
     }

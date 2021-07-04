@@ -9,7 +9,7 @@ import java.util.List;
 
 public class SecureUser implements UserDetails {
 
-    private  Long id;
+    private  long id;
     private  String username;
     private  String email;
     private  String password;
@@ -28,7 +28,7 @@ public class SecureUser implements UserDetails {
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.password = user.getPassword();
-        this.authorities = Collections.singletonList((GrantedAuthority) user::getAuthority);
+        this.authorities = Collections.singletonList(user::getAuthority);
     }
 
     @Override
